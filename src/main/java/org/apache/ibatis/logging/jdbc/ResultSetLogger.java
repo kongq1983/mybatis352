@@ -29,7 +29,7 @@ import java.util.StringJoiner;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/**
+/** ResultSet日志代理类
  * ResultSet proxy to add logging.
  *
  * @author Clinton Begin

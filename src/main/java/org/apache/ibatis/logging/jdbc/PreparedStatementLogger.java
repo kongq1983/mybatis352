@@ -25,7 +25,7 @@ import java.sql.ResultSet;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/**
+/** PreparedStatement 日志代理类
  * PreparedStatement proxy to add logging.
  *
  * @author Clinton Begin
@@ -47,14 +47,14 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
       }
-      if (EXECUTE_METHODS.contains(method.getName())) {
+      if (EXECUTE_METHODS.contains(method.getName())) { // 是否在排除的方法里(execute  executeUpdate executeQuery addBatch)
         if (isDebugEnabled()) {
           debug("Parameters: " + getParameterValueString(), true);
         }
         clearColumnInfo();
-        if ("executeQuery".equals(method.getName())) {
+        if ("executeQuery".equals(method.getName())) { // executeQuery
           ResultSet rs = (ResultSet) method.invoke(statement, params);
-          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
+          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack); // rs不为空，则创建rs代理ResultSetLogger
         } else {
           return method.invoke(statement, params);
         }
@@ -65,9 +65,9 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
           setColumn(params[0], params[1]);
         }
         return method.invoke(statement, params);
-      } else if ("getResultSet".equals(method.getName())) {
+      } else if ("getResultSet".equals(method.getName())) { // 调用getResultSet
         ResultSet rs = (ResultSet) method.invoke(statement, params);
-        return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
+        return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack); // rs不为空，则创建rs代理ResultSetLogger
       } else if ("getUpdateCount".equals(method.getName())) {
         int updateCount = (Integer) method.invoke(statement, params);
         if (updateCount != -1) {

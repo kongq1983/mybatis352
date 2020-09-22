@@ -24,7 +24,7 @@ import java.sql.Statement;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/**
+/** Statement日志代理类
  * Statement proxy to add logging.
  *
  * @author Clinton Begin
@@ -46,19 +46,19 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
       }
-      if (EXECUTE_METHODS.contains(method.getName())) {
+      if (EXECUTE_METHODS.contains(method.getName())) { // 是否在排除的方法里(execute  executeUpdate executeQuery addBatch)
         if (isDebugEnabled()) {
           debug(" Executing: " + removeBreakingWhitespace((String) params[0]), true);
         }
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
-          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
+          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack); // rs不为空，则创建rs代理ResultSetLogger
         } else {
           return method.invoke(statement, params);
         }
       } else if ("getResultSet".equals(method.getName())) {
         ResultSet rs = (ResultSet) method.invoke(statement, params);
-        return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
+        return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack); // rs不为空，则创建rs代理ResultSetLogger
       } else {
         return method.invoke(statement, params);
       }

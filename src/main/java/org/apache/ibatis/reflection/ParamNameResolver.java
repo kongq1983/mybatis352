@@ -33,7 +33,7 @@ public class ParamNameResolver {
   private static final String GENERIC_NAME_PREFIX = "param";
 
   /**
-   * <p>
+   * <p> 如果是@Param 则得到@Param的值
    * The key is the index and the value is the name of the parameter.<br />
    * The name is obtained from {@link Param} if specified. When {@link Param} is not specified,
    * the parameter index is used. Note that this index could be different from the actual index
@@ -62,18 +62,18 @@ public class ParamNameResolver {
       }
       String name = null;
       for (Annotation annotation : paramAnnotations[paramIndex]) {
-        if (annotation instanceof Param) {
+        if (annotation instanceof Param) { // 使用@Param注解
           hasParamAnnotation = true;
           name = ((Param) annotation).value();
           break;
         }
       }
-      if (name == null) {
+      if (name == null) { // @Param没指定
         // @Param was not specified.
-        if (config.isUseActualParamName()) {
-          name = getActualParamName(method, paramIndex);
+        if (config.isUseActualParamName()) { // useActualParamName=true  默认true
+          name = getActualParamName(method, paramIndex); // 使用实际的变量名
         }
-        if (name == null) {
+        if (name == null) { // useActualParamName = false
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
           name = String.valueOf(map.size());
@@ -99,7 +99,7 @@ public class ParamNameResolver {
     return names.values().toArray(new String[0]);
   }
 
-  /**
+  /** 会自动添加param1、param2，...访问变量
    * <p>
    * A single non-special parameter is returned without a name.
    * Multiple parameters are named using the naming rule.
@@ -115,11 +115,11 @@ public class ParamNameResolver {
       return args[names.firstKey()];
     } else {
       final Map<String, Object> param = new ParamMap<>();
-      int i = 0;
+      int i = 0; //初始化0
       for (Map.Entry<Integer, String> entry : names.entrySet()) {
         param.put(entry.getValue(), args[entry.getKey()]);
         // add generic param names (param1, param2, ...)
-        final String genericParamName = GENERIC_NAME_PREFIX + String.valueOf(i + 1);
+        final String genericParamName = GENERIC_NAME_PREFIX + String.valueOf(i + 1); //也就是从param1开始
         // ensure not to overwrite parameter named with @Param
         if (!names.containsValue(genericParamName)) {
           param.put(genericParamName, args[entry.getKey()]);

@@ -25,7 +25,7 @@ import java.sql.Statement;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
-/**
+/** Connection日志代理类
  * Connection proxy to add logging.
  *
  * @author Clinton Begin
@@ -53,18 +53,18 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
           debug(" Preparing: " + removeBreakingWhitespace((String) params[0]), true);
         }
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
-        stmt = PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
+        stmt = PreparedStatementLogger.newInstance(stmt, statementLog, queryStack); // 给PreparedStatement、CallableStatement创建代理类PreparedStatementLogger
         return stmt;
       } else if ("prepareCall".equals(method.getName())) {
         if (isDebugEnabled()) {
           debug(" Preparing: " + removeBreakingWhitespace((String) params[0]), true);
         }
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
-        stmt = PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
+        stmt = PreparedStatementLogger.newInstance(stmt, statementLog, queryStack); // 给PreparedStatement、CallableStatement创建代理类PreparedStatementLogger
         return stmt;
       } else if ("createStatement".equals(method.getName())) {
         Statement stmt = (Statement) method.invoke(connection, params);
-        stmt = StatementLogger.newInstance(stmt, statementLog, queryStack);
+        stmt = StatementLogger.newInstance(stmt, statementLog, queryStack); // 给Statement创建代理类StatementLogger
         return stmt;
       } else {
         return method.invoke(connection, params);
@@ -74,7 +74,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
     }
   }
 
-  /**
+  /** 创建Connection的代理类
    * Creates a logging version of a connection.
    *
    * @param conn - the original connection
