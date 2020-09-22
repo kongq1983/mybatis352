@@ -126,7 +126,7 @@ public class MapperAnnotationBuilder {
   public void parse() {
     String resource = type.toString();
     if (!configuration.isResourceLoaded(resource)) {
-      loadXmlResource();
+      loadXmlResource(); // 从xml加载，有可能没有xml的mapper文件的
       configuration.addLoadedResource(resource);
       assistant.setCurrentNamespace(type.getName());
       parseCache();
@@ -302,7 +302,7 @@ public class MapperAnnotationBuilder {
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
-      final String mappedStatementId = type.getName() + "." + method.getName();
+      final String mappedStatementId = type.getName() + "." + method.getName(); // 比如: com.kq.mybatis.mapper.AccountMapper.getAccountList
       Integer fetchSize = null;
       Integer timeout = null;
       StatementType statementType = StatementType.PREPARED;
@@ -329,7 +329,7 @@ public class MapperAnnotationBuilder {
           keyColumn = options.keyColumn();
         }
       } else {
-        keyGenerator = NoKeyGenerator.INSTANCE;
+        keyGenerator = NoKeyGenerator.INSTANCE; // 没有KeyGenerator 排除Insert和Update
       }
 
       if (options != null) {
@@ -347,7 +347,7 @@ public class MapperAnnotationBuilder {
         }
       }
 
-      String resultMapId = null;
+      String resultMapId = null; // 比如: com.kq.mybatis.mapper.AccountMapper.getAccountList-void
       ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
       if (resultMapAnnotation != null) {
         resultMapId = String.join(",", resultMapAnnotation.value());

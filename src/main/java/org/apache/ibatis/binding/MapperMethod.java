@@ -222,8 +222,8 @@ public class MapperMethod {
     private final SqlCommandType type;
 
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
-      final String methodName = method.getName();
-      final Class<?> declaringClass = method.getDeclaringClass();
+      final String methodName = method.getName(); // 接口名称 比如getAccountList
+      final Class<?> declaringClass = method.getDeclaringClass(); // 接口类
       MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
           configuration);
       if (ms == null) {
@@ -235,7 +235,7 @@ public class MapperMethod {
               + mapperInterface.getName() + "." + methodName);
         }
       } else {
-        name = ms.getId();
+        name = ms.getId(); // com.kq.mybatis.mapper.AccountMapper.getAccountList
         type = ms.getSqlCommandType();
         if (type == SqlCommandType.UNKNOWN) {
           throw new BindingException("Unknown execution method for: " + name);
@@ -253,8 +253,8 @@ public class MapperMethod {
 
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
         Class<?> declaringClass, Configuration configuration) {
-      String statementId = mapperInterface.getName() + "." + methodName;
-      if (configuration.hasStatement(statementId)) {
+      String statementId = mapperInterface.getName() + "." + methodName; // 比如: com.kq.mybatis.mapper.AccountMapper.getAccountList
+      if (configuration.hasStatement(statementId)) { // 存在该id
         return configuration.getMappedStatement(statementId);
       } else if (mapperInterface.equals(declaringClass)) {
         return null;
