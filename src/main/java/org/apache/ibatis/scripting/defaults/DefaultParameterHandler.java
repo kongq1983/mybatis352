@@ -65,9 +65,9 @@ public class DefaultParameterHandler implements ParameterHandler {
     if (parameterMappings != null) {
       for (int i = 0; i < parameterMappings.size(); i++) {
         ParameterMapping parameterMapping = parameterMappings.get(i);
-        if (parameterMapping.getMode() != ParameterMode.OUT) {
+        if (parameterMapping.getMode() != ParameterMode.OUT) { // IN or INOUT
           Object value;
-          String propertyName = parameterMapping.getProperty();
+          String propertyName = parameterMapping.getProperty(); //得到入参的属性名 比如username、a.id 等
           if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
             value = boundSql.getAdditionalParameter(propertyName);
           } else if (parameterObject == null) {
@@ -76,7 +76,7 @@ public class DefaultParameterHandler implements ParameterHandler {
             value = parameterObject;
           } else {
             MetaObject metaObject = configuration.newMetaObject(parameterObject);
-            value = metaObject.getValue(propertyName); // 通过metaObject得到
+            value = metaObject.getValue(propertyName); // 通过metaObject得到  得到具体要设置pos的值  first parameter is 1, the second is 2
           }
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           JdbcType jdbcType = parameterMapping.getJdbcType();
@@ -84,7 +84,7 @@ public class DefaultParameterHandler implements ParameterHandler {
             jdbcType = configuration.getJdbcTypeForNull();
           }
           try {
-            typeHandler.setParameter(ps, i + 1, value, jdbcType);
+            typeHandler.setParameter(ps, i + 1, value, jdbcType);  // first parameter is 1, the second is 2
           } catch (TypeException | SQLException e) {
             throw new TypeException("Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);
           }

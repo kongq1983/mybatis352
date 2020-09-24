@@ -43,8 +43,8 @@ public class BoundSql {
 
   public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
     this.sql = sql;
-    this.parameterMappings = parameterMappings;
-    this.parameterObject = parameterObject;
+    this.parameterMappings = parameterMappings; //mybatis绑定变量 #{a.id}  #{username}
+    this.parameterObject = parameterObject; // 绑定变量和值
     this.additionalParameters = new HashMap<>();
     this.metaParameters = configuration.newMetaObject(additionalParameters);
   }
