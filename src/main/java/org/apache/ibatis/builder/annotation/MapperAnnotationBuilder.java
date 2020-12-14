@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -127,11 +127,11 @@ public class MapperAnnotationBuilder {
     String resource = type.toString();
     if (!configuration.isResourceLoaded(resource)) {
       loadXmlResource(); // 从xml加载，有可能没有xml的mapper文件的
-      configuration.addLoadedResource(resource);
-      assistant.setCurrentNamespace(type.getName());
+      configuration.addLoadedResource(resource); // hashset 不会重复添加
+      assistant.setCurrentNamespace(type.getName()); // 设置namespace
       parseCache();
       parseCacheRef();
-      Method[] methods = type.getMethods();
+      Method[] methods = type.getMethods(); // 获得方法
       for (Method method : methods) {
         try {
           // issue #237
@@ -168,11 +168,11 @@ public class MapperAnnotationBuilder {
     if (!configuration.isResourceLoaded("namespace:" + type.getName())) {
       String xmlResource = type.getName().replace('.', '/') + ".xml";
       // #1347
-      InputStream inputStream = type.getResourceAsStream("/" + xmlResource);
+      InputStream inputStream = type.getResourceAsStream("/" + xmlResource); //  /com/kq/mybatis/mapper/AccountMapper.xml
       if (inputStream == null) {
         // Search XML mapper that is not in the module but in the classpath.
         try {
-          inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource);
+          inputStream = Resources.getResourceAsStream(type.getClassLoader(), xmlResource); //和AccountMapper同个目录下  /com/kq/mybatis/mapper/AccountMapper.xml
         } catch (IOException e2) {
           // ignore, resource is not required
         }

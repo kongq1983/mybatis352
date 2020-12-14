@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2019 the original author or authors.
+       Copyright 2009-2020 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -123,11 +123,11 @@
     <url>https://travis-ci.org/mybatis/mybatis-3/</url>
   </ciManagement>
   <distributionManagement>
-    <site>
-      <id>gh-pages</id>
-      <name>Mybatis GitHub Pages</name>
-      <url>git:ssh://git@github.com/mybatis/mybatis-3.git?gh-pages#</url>
-    </site>
+<!--    <site>-->
+<!--      <id>gh-pages</id>-->
+<!--      <name>Mybatis GitHub Pages</name>-->
+<!--      <url>git:ssh://git@github.com/mybatis/mybatis-3.git?gh-pages#</url>-->
+<!--    </site>-->
   </distributionManagement>
 
   <properties>
@@ -149,14 +149,14 @@
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
       <version>3.2.10</version>
-      <scope>compile</scope>
+      <!--<scope>compile</scope>-->
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
       <version>3.24.1-GA</version>
-      <scope>compile</scope>
+     <!-- <scope>compile</scope>-->
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -304,10 +304,10 @@
           </systemProperties>
         </configuration>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pdf-plugin</artifactId>
-      </plugin>
+      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -326,6 +326,8 @@
                   <include>org.javassist:javassist</include>
                 </includes>
               </artifactSet>
+              <!-- 我加的 -->
+              <createSourcesJar>true</createSourcesJar>
               <relocations>
                 <relocation>
                   <pattern>ognl</pattern>
@@ -340,14 +342,14 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <locales>en,es,ja,fr,zh_CN,ko</locales>
         </configuration>
-      </plugin>
-      <plugin>
+      </plugin>-->
+      <!--<plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
@@ -356,7 +358,7 @@
             <exclude>org.apache.ibatis.javassist.*</exclude>
           </excludes>
         </configuration>
-      </plugin>
+      </plugin>-->
     </plugins>
 
     <resources>

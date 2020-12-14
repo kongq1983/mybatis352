@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -221,7 +221,7 @@ public final class TypeHandlerRegistry {
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMap(type);
     TypeHandler<?> handler = null;
     if (jdbcHandlerMap != null) {
-      handler = jdbcHandlerMap.get(jdbcType);
+      handler = jdbcHandlerMap.get(jdbcType); // 根据jdbc类型，得到TypeHandler   jdbcType为null，则返回UnknownTypeHandler
       if (handler == null) {
         handler = jdbcHandlerMap.get(null);
       }

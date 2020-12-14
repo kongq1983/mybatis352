@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  */
 public class DefaultParameterHandler implements ParameterHandler {
 
-  private final TypeHandlerRegistry typeHandlerRegistry;
+  private final TypeHandlerRegistry typeHandlerRegistry; // HandlerR注册类
 
   private final MappedStatement mappedStatement;
   private final Object parameterObject;
@@ -64,21 +64,21 @@ public class DefaultParameterHandler implements ParameterHandler {
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings != null) {
       for (int i = 0; i < parameterMappings.size(); i++) {
-        ParameterMapping parameterMapping = parameterMappings.get(i);
-        if (parameterMapping.getMode() != ParameterMode.OUT) { // IN or INOUT
+        ParameterMapping parameterMapping = parameterMappings.get(i); // 具体的第几个参数-详细信息
+        if (parameterMapping.getMode() != ParameterMode.OUT) { // IN or INOUT 才处理
           Object value;
-          String propertyName = parameterMapping.getProperty(); //得到入参的属性名 比如username、a.id 等
+          String propertyName = parameterMapping.getProperty(); //得到入参的属性名 比如username、a.id 等 #{id} #{a.id}
           if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
             value = boundSql.getAdditionalParameter(propertyName);
           } else if (parameterObject == null) {
             value = null;
-          } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-            value = parameterObject;
+          } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) { // 单个参数的类型，如果在typeHandlerRegistry里注册了，value就是=parameterObject
+            value = parameterObject; // 单个参数情况下，并且在typeHandlerRegistry里注册了parameterObject的类型，则value就是=parameterObject
           } else {
-            MetaObject metaObject = configuration.newMetaObject(parameterObject);
-            value = metaObject.getValue(propertyName); // 通过metaObject得到  得到具体要设置pos的值  first parameter is 1, the second is 2
+            MetaObject metaObject = configuration.newMetaObject(parameterObject); // 一般都是走这里的
+            value = metaObject.getValue(propertyName); // 通过metaObject得到具体要设置pos的值  first parameter is 1, the second is 2
           }
-          TypeHandler typeHandler = parameterMapping.getTypeHandler();
+          TypeHandler typeHandler = parameterMapping.getTypeHandler(); // 未指定是UnknownTypeHandler
           JdbcType jdbcType = parameterMapping.getJdbcType();
           if (value == null && jdbcType == null) {
             jdbcType = configuration.getJdbcTypeForNull();

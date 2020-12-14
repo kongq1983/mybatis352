@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -611,7 +611,7 @@ public class Configuration {
     }
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
-    }
+    } // MyBatis 拦截器
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
   }
@@ -942,16 +942,16 @@ public class Configuration {
     @Override
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
-      if (containsKey(key)) {
+      if (containsKey(key)) { //key: com.kq.mybatis.mapper.AccountMapper.getAccountList 完整的key,如果重复就会报错
         throw new IllegalArgumentException(name + " already contains value for " + key
             + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
       }
       if (key.contains(".")) {
-        final String shortKey = getShortName(key);
+        final String shortKey = getShortName(key); // getAccountList
         if (super.get(shortKey) == null) {
           super.put(shortKey, value);
         } else {
-          super.put(shortKey, (V) new Ambiguity(shortKey));
+          super.put(shortKey, (V) new Ambiguity(shortKey)); //shortKey有可能会重复的,重复就放Ambiguity
         }
       }
       return super.put(key, value);
@@ -959,11 +959,11 @@ public class Configuration {
 
     @Override
     public V get(Object key) {
-      V value = super.get(key);
+      V value = super.get(key); // 先根据完整的key取,取不到报错
       if (value == null) {
         throw new IllegalArgumentException(name + " does not contain value for " + key);
       }
-      if (value instanceof Ambiguity) {
+      if (value instanceof Ambiguity) { // 如果类型是Ambiguity,则报错
         throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
             + " (try using the full name including the namespace, or rename one of the entries)");
       }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,12 +33,12 @@ import org.apache.ibatis.session.Configuration;
  */
 public final class MappedStatement {
 
-  private String resource;
+  private String resource; // file [E:\zyzhworkspace\springboot2\database\mybatis\mybatis-mapper\target\classes\com\kq\mybatis\mapper\AccountXmlMapper.xml]
   private Configuration configuration;
   private String id;
   private Integer fetchSize;
   private Integer timeout;
-  private StatementType statementType;
+  private StatementType statementType; //STATEMENT, PREPARED, CALLABLE
   private ResultSetType resultSetType;
   private SqlSource sqlSource;
   private Cache cache;
@@ -47,7 +47,7 @@ public final class MappedStatement {
   private boolean flushCacheRequired;
   private boolean useCache;
   private boolean resultOrdered;
-  private SqlCommandType sqlCommandType;
+  private SqlCommandType sqlCommandType; // UNKNOWN, INSERT, UPDATE, DELETE, SELECT, FLUSH;
   private KeyGenerator keyGenerator;
   private String[] keyProperties;
   private String[] keyColumns;

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
+ *    Copyright 2009-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,9 +54,9 @@ public class ParameterMapping {
 
     public Builder(Configuration configuration, String property, Class<?> javaType) {
       parameterMapping.configuration = configuration;
-      parameterMapping.property = property;
-      parameterMapping.javaType = javaType;
-      parameterMapping.mode = ParameterMode.IN;
+      parameterMapping.property = property;  // #{username} 如果是這樣 property=username
+      parameterMapping.javaType = javaType; // 未指定 默認Object
+      parameterMapping.mode = ParameterMode.IN; // IN
     }
 
     public Builder mode(ParameterMode mode) {
